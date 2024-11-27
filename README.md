@@ -1,0 +1,518 @@
+### **What is ROS?**
+
+
+ROS (Robot Operating System) is a software framework designed for writing robot software, with the primary goal of enabling developers to reuse robotic software across the globe. It offers a collection of tools, libraries, and conventions to simplify creating complex robot behaviors on a variety of platforms. Think of ROS as the ultimate detective's toolkit — just like Sherlock Holmes needs his magnifying glass and deductive reasoning to solve mysteries, ROS provides the necessary tools and frameworks to help you uncover the solutions to the complexities of robot development.
+
+ROS is an open-source, meta-operating system for robots. It provides services like hardware abstraction, low-level device control, message-passing between processes, and package management. With tools and libraries for obtaining, building, writing, and running code across multiple computers, it allows developers to seamlessly build complex robotic systems. In many ways, it's similar to other robotic frameworks like Player, YARP, and Microsoft Robotics Studio, but its open-source nature and broad community support set it apart.
+
+
+
+### **Basics of ROS**
+
+Before we get into the action, it’s essential to understand the basics of ROS. It’s always best to write the code yourself rather than copying and pasting, as it helps you grasp the concepts more thoroughly. Python is recommended over C++ for beginners because of its easier syntax and readability.
+
+To get started, you'll need to create a ROS workspace and navigate the ROS filesystem. This may seem like an investigation at first, but don’t worry — just like Holmes solves complex cases step by step, you'll get there. We’ll walk you through some key tools, and the next few tutorials will focus on setting up your environment.
+
+
+To start off, these two tutorials will cover aspects such as **creating a ROS Workspace** and
+[**navigating the ROS Filesystem**](https://docs.ros.org/en/humble/Tutorials/Beginner-CLI-Tools/Configuring-ROS2-Environment.html). 
+To help you a little bit more, we will also explain you some command line tools and will highlight the sections you should focus more when you open these links......
+
+Sections to focus in "Configuring your ROS environment":
+
+- Sourcing of setup.bash file : ```source /opt/ros/humble/setup.bash```
+- for Docker you do not required to ssource the file 
+The purpose of this command line is basically to tell your terminal the location of your workspace so that ROS can find its path. If we unsource the setup.bash files then the Ubuntu will not be able to locate the packages of that workspace.
+- Its an advise to not panic if you don't grasp things in one go, try to go completely by this twice or thrice for more clarity and try to connect dots while reading the second or third time.
+
+Next, we shall look at packages.
+
+#### **What is a package?** 
+
+In the world of ROS, a package is the key to organizing your programs, much like a case file contains all the details needed for investigation. Every ROS program you write is contained within a package, which can include source code (either Python or C++), configuration files, launch files, and dependencies. The package structure is organized into directories such as:
+
+launch: Contains launch files.
+scripts: Contains source files (Python).
+package.xml: Information about the package and its dependencies.
+
+In ROS2, Python or C++ are typically used for writing the script files in the package. If you want to move forward, understanding how to work with packages will be essential, just like Sherlock understanding the importance of each piece of evidence.
+
+### **Colcon**
+
+In the ROS ecosystem, software is organized into many packages. Unlike workflows where a developer works on just one package at a time, ROS developers often handle multiple packages simultaneously. To manage this, Colcon is used as a build tool to compile all the packages together with a single command. It's akin to Holmes managing multiple clues from different locations and tying them all together to form a cohesive solution.
+
+To install and configure Colcon, run the following command:
+```bash
+sudo apt install python3-colcon-common-extensions
+```
+
+### **Create a workspace**
+
+A workspace in ROS 2 is like Sherlock Holmes' case file—a place where all the necessary clues (ROS 2 packages) are stored. Before starting your investigation, you must "source" your ROS 2 workspace, just like Holmes prepares his tools before solving a case. This step ensures your terminal knows where to find the packages you need.
+
+For clarity and organization, it's best practice to create a new directory for each new workspace—just as Holmes keeps each case separate to avoid confusion.
+
+
+
+```bash
+mkdir erc_ws
+cd erc_ws
+mkdir src
+cd src
+```
+From the root of your workspace (erc_ws), you can now build your packages using the command:
+
+```bash
+cd ..
+colcon build
+```
+Now, let’s add the erc_ws path. Execute the following command:
+
+```bash
+echo "source ~/erc_ws/install/setup.bash" >> ~/.bashrc
+```
+
+When you make changes to your .bashrc file, run:
+```bash
+source ~/.bashrc
+```
+This command applies the changes immediately without restarting your terminal.
+
+A package is an organizational unit for your ROS 2 code. If you want to be able to install your code or share it with others, then you’ll need it to be organized in a package. With packages, you can release your ROS 2 work and allow others to build and use it easily.
+
+Package creation in ROS 2 uses ament as its build system and colcon as its build tool. You can create a package using either CMake or Python.
+
+Recall that packages should be created in the src directory, not the root of the workspace. So, navigate into ```erc_ws/src```, and run the package creation command:
+
+```bash
+cd erc_ws/src
+ros2 pkg create --build-type Apache-2.0 week0_tutorials
+```
+
+### Nodes
+In ROS, each program is called a node—think of it like a clue in a Sherlock Holmes mystery. Each node does a specific job, like collecting evidence or analyzing a suspect. These nodes talk to each other through topics, which are like channels for sharing information.
+
+For example, one node might capture images from a camera, sending them to another node for analysis, like Holmes looking over a piece of evidence. Then, the second node might send a command to a third node, like Holmes taking action based on his findings. The nodes communicate by sending messages—one node can publish a message to a topic, or another node can subscribe to a topic to receive the information, helping to solve the task, just like Sherlock solving the case.
+
+### Introducing TurtleSim
+
+To demonstrate how to run nodes, let us run 'turtlesim_node' node from a pre-installed package, 'turtlesim':
+
+To run the 'turtlesim_node' node, run this **in a terminal**:
+```bash
+ros2 run turtlesim turtlesim_node
+```
+You'll see the new turtlesim window.
+
+## Using ros2 launch to run multiple nodes at once
+
+ROS 2 Launch files allow you to start up and configure a number of executables containing ROS 2 nodes simultaneously.
+
+Create a new directory in ```erc_ws/src/week0_tutorials``` to store your launch files:
+```bash
+cd src/week0_tutorials
+mkdir launch
+```
+
+Let’s put together a ROS 2 launch file using the turtlesim package and its executables.
+
+```bash
+cd launch
+touch turtlesim_launch.py
+```
+Open this directory with code using the following command
+```bash
+code .
+```
+
+Copy and paste the complete code into the ```launch/turtlesim_launch.py``` file:
+
+```python
+from launch import LaunchDescription
+from launch_ros.actions import Node
+
+def generate_launch_description():
+    return LaunchDescription([
+        Node(
+            package='turtlesim',
+            executable='turtlesim_node',
+            name='sim'
+        )
+    ])
+```
+Then, hit <kbd>CTRL</kbd>+<kbd>S</kbd>, to save the changes to the file, then close the window.
+
+To run the launch file created above, enter into the directory you created earlier and run the following command:
+
+```bash
+ros2 launch turtlesim_launch.py
+```
+
+File structure is something like this
+
+```bash
+erc_ws
+  |_ Install
+  |_src
+       |_week0_tutorials(pkg)
+               |_src
+               |_scripts
+               |_launch
+               |_config
+```
+Launch files in a particular package can launch nodes from other packages as well as launch files from other packages.
+
+```PS:``` In the turtlesim_launch we run the launch file from the same directory, if we want to run it from any directory using the generalized command, i.e.
+```bash
+ros2 launch <package name> <launch file name> 
+```
+ then we have to specify the path in setup.py and then go to workspace directory and then colcon build, and run this. Here we exceuted the run file directly from the directory, though we will do this later in the end of the tutorial in the ```pubsub.launch.py``` case.
+
+### Topics
+A topic is like a channel for exchanging data. Some nodes are Publishers and send data to the topic, while others are Subscribers and receive data from it.
+
+Each topic has a specific message type, like the type of clue in a case. Both publishers and subscribers must handle the same message type to communicate properly.
+
+You can create publishers and subscribers in any ROS-supported language directly inside nodes. When a node wants to publish data, it informs the ROS master. If another node wants to subscribe, it asks the ROS master where to get the data—similar to Sherlock and Watson sharing clues. A node can have multiple publishers and subscribers for different topics, just like Holmes tracking multiple leads at once
+
+
+PS:
+
+- ```rqt_graph```:
+Reveals communication between nodes through topics.
+Essential for understanding node interactions.
+
+- ```ros2 topic echo```:
+Displays real-time data published on a specific topic.
+Useful for monitoring topic content.
+
+- ```ros2 topic pub```:
+Enables manual publication on desired topics.
+Handy for testing and injecting data into the system.
+
+Try running these commands and viewing the output.
+
+## Publisher-Subscriber Interface <a name="PubSub"></a>
+
+Message passing in ROS happens with the Publisher-Subscriber Interface provided by ROS library functions.
+
+Creating a publisher or subscriber node is just like creating any other node. <br />
+
+1. Go to the package where you want to create these nodes 
+
+2. Make a new directory ```scripts```
+ 
+3. Create python script files for a publisher and a subscriber
+
+
+### Create a executeable python file
+
+Navigate into ```erc_ws/src/week0_tutorials/week0_tutorials``` and then create a python file 
+
+```bash
+cd ~
+cd erc_ws/src/week0_tutorials/week0_tutorials
+touch talker.py
+chmod +x talker.py #Making the python file executable
+```
+
+### Writing a simple Publisher Node <a name="Publisher"></a>
+
+This is a basic publisher node python script ```talker.py```  (taken from the official ROS tutorials from the website, and comments are added to help you understand the working of each line):
+
+To open VS code.
+```bash
+code .
+```
+Paste the following in the ```talker.py```
+
+```python
+#!/usr/bin/env python
+import rclpy
+from std_msgs.msg import String
+
+def timer_callback(timer, i):
+    # Create a String message
+    msg = String()
+    msg.data = 'Hello World'
+
+    # Publish the message using the global publisher
+    publisher.publish(msg)
+
+    # Print a message indicating what is being published
+    print('Publishing: "%s"' % msg.data)
+
+def main(args=None):
+    # Initialize the ROS 2 system
+    rclpy.init(args=args)
+
+    # Create a ROS 2 node named 'minimal_publisher'
+    node = rclpy.create_node('minimal_publisher')
+
+    # Create a global publisher for the 'topic' with a message type of String
+    global publisher
+    publisher = node.create_publisher(String, 'topic', 10)
+
+    # Set the timer period to 0.5 seconds
+    timer_period = 0.5
+
+    # Initialize a counter variable
+    i = 0
+
+    # Create a timer that calls the timer_callback function every timer_period seconds
+    timer = node.create_timer(timer_period, lambda: timer_callback(timer, i))
+
+    # Increment the counter
+    i += 1
+
+    try:
+        # Start spinning the ROS 2 node
+        rclpy.spin(node)
+    finally:
+        # Destroy the node explicitly when done spinning
+        # (optional - otherwise it will be done automatically
+        # when the garbage collector destroys the node object)
+        node.destroy_node()
+
+        # Shutdown the ROS 2 system
+        rclpy.shutdown()
+
+# Entry point to the script
+if __name__ == '__main__':
+    # Call the main function if this script is the main module
+    main()
+```
+
+Then, hit <kbd>CTRL</kbd>+<kbd>S</kbd>, to save the changes to the file.
+
+## Add dependencies
+Navigate one level back to the ```erc_ws/src/week0_tutorials``` directory, where the setup.py, setup.cfg, and package.xml files have been created for you.
+
+```bash
+cd ..
+code .
+```
+
+Open package.xml with your text editor. Add the following dependencies corresponding to your node’s import statements:
+
+```bash
+<exec_depend>rclpy</exec_depend>
+<exec_depend>std_msgs</exec_depend>
+```
+Then, hit <kbd>CTRL</kbd>+<kbd>S</kbd>, to save the changes to the file.
+
+This declares the package needs rclpy and std_msgs when its code is executed.
+
+
+## Add an entry point
+
+Open the setup.py file, and add the following line within the console_scripts brackets of the entry_points field:
+
+```bash
+entry_points={
+        'console_scripts': [
+                'publisher = week0_tutorials.talker:main',
+        ],
+},
+```
+Then, hit <kbd>CTRL</kbd>+<kbd>S</kbd>, to save the changes to the file.
+
+
+### Writing a simple Subscriber Node <a name="Subscriber"></a>
+
+Make the listener.py file similarly as we have done for talker.py.
+
+This is a basic subscriber node python script ```listener.py``` (taken from the official ROS tutorials from the website, and comments are added to help you understand the working of each line):
+
+```bash
+cd ~
+cd erc_ws/src/week0_tutorials/week0_tutorials
+touch listener.py
+chmod +x listener.py
+```
+
+Paste the following in the ```listener.py```
+
+```python
+#!/usr/bin/env python
+import rclpy
+from std_msgs.msg import String
+
+def listener_callback(msg):
+    print('I heard: "%s"' % msg.data)
+
+def main(args=None):
+    # Initialize the ROS 2 system
+    rclpy.init(args=args)
+
+    # Create a ROS 2 node named 'minimal_subscriber'
+    node = rclpy.create_node('minimal_subscriber')
+
+    # Create a subscription to the 'topic' with a message type of String
+    subscription = node.create_subscription(String, 'topic', listener_callback, 10)
+
+    # Prevent unused variable warning
+    subscription
+
+    try:
+        # Start spinning the ROS 2 node
+        rclpy.spin(node)
+    finally:
+        # Destroy the node explicitly when done spinning
+        # (optional - otherwise it will be done automatically
+        # when the garbage collector destroys the node object)
+        node.destroy_node()
+
+        # Shutdown the ROS 2 system
+        rclpy.shutdown()
+
+# Entry point to the script
+if __name__ == '__main__':
+    # Call the main function if this script is the main module
+    main()
+```
+
+Then, hit <kbd>CTRL</kbd>+<kbd>S</kbd>, to save the changes to the file.
+
+Now similarly for subscriber add entry points as in publisher node.
+
+```bash
+cd ..
+code .
+```
+Now change the following in ```setup.py```
+
+```bash
+entry_points={
+        'console_scripts': [
+                'publisher = week0_tutorials.talker:main',
+                'subscriber = week0_tutorials.listener:main',
+        ],
+},
+```
+Then, hit <kbd>CTRL</kbd>+<kbd>S</kbd>, to save the changes to the file.
+
+## Build and run
+
+You likely already have the ```rclpy``` and ```std_msgs``` packages installed as part of your ROS 2 system. It’s good practice to run rosdep in the root of your workspace (erc_ws) to check for missing dependencies before building:
+
+```bash
+cd ..
+```
+repeet till erc_ws directory 
+
+```(optional)```
+
+```bash
+rosdep install -i --from-path src --rosdistro humble -y
+```
+
+
+
+Finally, go to erc_ws and build the package
+
+```bash
+colcon build
+```
+
+Now source the setup files
+
+```bash
+source install/setup.bash
+```
+
+Now run the publisher node:
+
+```bash
+ros2 run week0_tutorials publisher
+```
+
+Similarly run the subscriber node in a new terminal. Remember to source the workspace if you haven't already.
+
+```bash
+ros2 run week0_tutorials subscriber
+```
+
+You can see that 'Hello World: n' is being printed. The Publisher Node is up and running!
+
+You can see that 'I heard: "Hello World: n' is being printed. The Subscriber Node is running as well.
+
+Note that once you stop running the Publisher Node ( Press `Ctrl`+`C` while you're in the terminal that is running the Publisher Node), the Subscriber Node stops running as well. 
+
+### Running the publisher and subscriber using a launch file
+
+Create a file ```week0_tutorials.launch.py``` in the ```launch``` folder of ```erc_ws/src/week0_tutorials``` 
+
+```bash
+cd launch
+touch pubsub.launch.py
+code .
+```
+
+Add the following code.
+
+```python
+from launch import LaunchDescription
+from launch_ros.actions import Node
+
+def generate_launch_description():
+    return LaunchDescription([
+        Node(
+            package='week0_tutorials',
+            executable='publisher',
+        ),
+        Node(
+            package='week0_tutorials',
+            executable='subscriber',
+        ),
+    ])
+```
+
+```package``` refers to the name of the package in which the node is present in, ```executable``` is the name of the node file
+
+```bash
+cd ..
+code .
+```
+Now add the following line in ```setup.py``` in the ```data_files```
+
+
+```python
+(os.path.join('share', package_name, 'launch'), glob(os.path.join('launch', 'pubsub.launch.py'))),
+```
+
+and add the follwing on the top of ```setup.py```
+
+```python 
+import os
+from glob import glob
+```
+
+On executing ```ros2 launch week0_tutorials pubsub.launch.py```, you will be able to see **Publisher** and **Subscriber** in the list of Nodes. 
+
+While the system is still running, open a new terminal and run ```rqt_graph``` to get a better idea of the relationship between the nodes in your launch file.
+
+## Now, enough chatter. Time to do ...
+
+Create a new package ```sherlock``` in ```erc_ws```, which will contain three nodes and a launch file.
+
+1) The first node will publish the following text to the topic ```listen_1```.
+
+	**I am not a psychopath, Anderson.**
+
+2) The second node will publish the following text to the topic ```listen_2```.
+
+ 	**I am a high-functioning sociopath.**
+
+3) The third node will subscribe to ```listen_1``` and ```listen_2```.
+
+4) The third node should display the following statement on the terminal at some frequency.
+
+	**I am not a psychopath, Anderson. I am a high-functioning sociopath.**
+
+5) The launch file will launch all the three nodes.
+
+<img src="W0_Images/Sociopath.gif" width=400 height=220>
+
+Have fun !
+
