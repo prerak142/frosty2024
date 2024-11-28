@@ -1,10 +1,9 @@
 ### **What is ROS?**
 
 
-ROS (Robot Operating System) is a software framework designed for writing robot software, with the primary goal of enabling developers to reuse robotic software across the globe. It offers a collection of tools, libraries, and conventions to simplify creating complex robot behaviors on a variety of platforms. Think of ROS as the ultimate detective's toolkit — just like Sherlock Holmes needs his magnifying glass and deductive reasoning to solve mysteries, ROS provides the necessary tools and frameworks to help you uncover the solutions to the complexities of robot development.
+ROS (Robot Operating System) is an open-source software framework designed for writing robot software, much like how Sherlock Holmes uses his toolkit to solve mysteries. Just as Holmes relies on his magnifying glass and sharp reasoning to uncover hidden details, ROS equips developers with the essential tools and libraries to navigate the complexities of robot development. Its primary goal is to help developers reuse software across the globe, making it easier to create complex robot behaviors on a variety of platforms.
 
-ROS is an open-source, meta-operating system for robots. It provides services like hardware abstraction, low-level device control, message-passing between processes, and package management. With tools and libraries for obtaining, building, writing, and running code across multiple computers, it allows developers to seamlessly build complex robotic systems. In many ways, it's similar to other robotic frameworks like Player, YARP, and Microsoft Robotics Studio, but its open-source nature and broad community support set it apart.
-
+ROS offers services like hardware abstraction, low-level device control, message-passing between processes, and package management. With its set of tools and libraries for obtaining, building, writing, and running code across multiple computers, ROS enables developers to seamlessly construct sophisticated robotic systems. While it shares similarities with other robotic frameworks like Player, YARP, and Microsoft Robotics Studio, its open-source nature and active community support make it stand out as the go-to toolkit for robotic development.
 
 
 ### **Basics of ROS**
@@ -21,7 +20,6 @@ To help you a little bit more, we will also explain you some command line tools 
 Sections to focus in "Configuring your ROS environment":
 
 - Sourcing of setup.bash file : ```source /opt/ros/humble/setup.bash```
-- for Docker you do not required to ssource the file 
 The purpose of this command line is basically to tell your terminal the location of your workspace so that ROS can find its path. If we unsource the setup.bash files then the Ubuntu will not be able to locate the packages of that workspace.
 - Its an advise to not panic if you don't grasp things in one go, try to go completely by this twice or thrice for more clarity and try to connect dots while reading the second or third time.
 
@@ -78,6 +76,9 @@ source ~/.bashrc
 ```
 This command applies the changes immediately without restarting your terminal.
 
+
+### **Create a new package**
+
 A package is an organizational unit for your ROS 2 code. If you want to be able to install your code or share it with others, then you’ll need it to be organized in a package. With packages, you can release your ROS 2 work and allow others to build and use it easily.
 
 Package creation in ROS 2 uses ament as its build system and colcon as its build tool. You can create a package using either CMake or Python.
@@ -94,6 +95,10 @@ In ROS, each program is called a node—think of it like a clue in a Sherlock Ho
 
 For example, one node might capture images from a camera, sending them to another node for analysis, like Holmes looking over a piece of evidence. Then, the second node might send a command to a third node, like Holmes taking action based on his findings. The nodes communicate by sending messages—one node can publish a message to a topic, or another node can subscribe to a topic to receive the information, helping to solve the task, just like Sherlock solving the case.
 
+
+![Nodes-TopicandService](https://github.com/user-attachments/assets/5ba624ed-6b3d-4de1-b738-a2fbfc2d63a4)
+
+
 ### Introducing TurtleSim
 
 To demonstrate how to run nodes, let us run 'turtlesim_node' node from a pre-installed package, 'turtlesim':
@@ -103,6 +108,8 @@ To run the 'turtlesim_node' node, run this **in a terminal**:
 ros2 run turtlesim turtlesim_node
 ```
 You'll see the new turtlesim window.
+
+![turtlesim](https://github.com/user-attachments/assets/3cb5f1c4-f091-4677-9080-fde000136fe6)
 
 ## Using ros2 launch to run multiple nodes at once
 
@@ -169,12 +176,13 @@ ros2 launch <package name> <launch file name>
  then we have to specify the path in setup.py and then go to workspace directory and then colcon build, and run this. Here we exceuted the run file directly from the directory, though we will do this later in the end of the tutorial in the ```pubsub.launch.py``` case.
 
 ### Topics
-A topic is like a channel for exchanging data. Some nodes are Publishers and send data to the topic, while others are Subscribers and receive data from it.
+In ROS, a topic acts like a channel for exchanging data, with nodes serving as either Publishers, sending data, or Subscribers, receiving it. Each topic has a specific message type, similar to how Sherlock Holmes might focus on a specific type of clue in a case. To communicate effectively, both publishers and subscribers must handle the same message type.
 
-Each topic has a specific message type, like the type of clue in a case. Both publishers and subscribers must handle the same message type to communicate properly.
+Nodes can create publishers and subscribers in any ROS-supported language. When a node publishes data, it notifies the ROS master, while a subscriber asks the master where to find the data—like Sherlock and Watson sharing clues. Just as Holmes tracks multiple leads, a node can have multiple publishers and subscribers for different topics.
 
-You can create publishers and subscribers in any ROS-supported language directly inside nodes. When a node wants to publish data, it informs the ROS master. If another node wants to subscribe, it asks the ROS master where to get the data—similar to Sherlock and Watson sharing clues. A node can have multiple publishers and subscribers for different topics, just like Holmes tracking multiple leads at once
 
+
+![Topic-MultiplePublisherandMultipleSubscriber](https://github.com/user-attachments/assets/3a6fd12b-35f9-4236-9e07-82b41e87b22a)
 
 PS:
 
