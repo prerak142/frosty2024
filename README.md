@@ -53,10 +53,8 @@ For clarity and organization, it's best practice to create a new directory for e
 
 
 ```bash
-mkdir erc_ws
-cd erc_ws
-mkdir src
-cd src
+mkdir-p erc_ws/src
+cd erc_ws/src
 ```
 From the root of your workspace (erc_ws), you can now build your packages using the command:
 
