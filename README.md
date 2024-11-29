@@ -97,7 +97,7 @@ For example, one node might capture images from a camera, sending them to anothe
 ![Nodes-TopicandService](https://github.com/user-attachments/assets/5ba624ed-6b3d-4de1-b738-a2fbfc2d63a4)
 
 
-### *Introducing TurtleSim*
+### Introducing TurtleSim
 
 To demonstrate how to run nodes, let us run 'turtlesim_node' node from a pre-installed package, 'turtlesim':
 
@@ -111,13 +111,12 @@ You'll see the new turtlesim window.
 
 # *Creating a launch file*
 
-## Using ros2 launch to run multiple nodes at once
 
 ROS 2 Launch files allow you to start up and configure a number of executables containing ROS 2 nodes simultaneously.
 
 Create a new directory in ```erc_ws/src/week0_tutorials``` to store your launch files:
 ```bash
-cd src/week0_tutorials
+cd week0_tutorials
 mkdir launch
 ```
 
