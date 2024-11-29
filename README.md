@@ -53,7 +53,7 @@ For clarity and organization, it's best practice to create a new directory for e
 
 
 ```bash
-mkdir-p erc_ws/src
+mkdir -p erc_ws/src
 cd erc_ws/src
 ```
 From the root of your workspace (erc_ws), you can now build your packages using the command:
@@ -84,8 +84,8 @@ Package creation in ROS 2 uses ament as its build system and colcon as its build
 Recall that packages should be created in the src directory, not the root of the workspace. So, navigate into ```erc_ws/src```, and run the package creation command:
 
 ```bash
-cd erc_ws/src
-ros2 pkg create --build-type Apache-2.0 week0_tutorials
+cd src
+ros2 pkg create --build-type ament_python week0_tutorials
 ```
 
 ### Nodes
@@ -97,7 +97,7 @@ For example, one node might capture images from a camera, sending them to anothe
 ![Nodes-TopicandService](https://github.com/user-attachments/assets/5ba624ed-6b3d-4de1-b738-a2fbfc2d63a4)
 
 
-### Introducing TurtleSim
+### *Introducing TurtleSim*
 
 To demonstrate how to run nodes, let us run 'turtlesim_node' node from a pre-installed package, 'turtlesim':
 
@@ -108,6 +108,8 @@ ros2 run turtlesim turtlesim_node
 You'll see the new turtlesim window.
 
 ![turtlesim](https://github.com/user-attachments/assets/3cb5f1c4-f091-4677-9080-fde000136fe6)
+
+# *Creating a launch file*
 
 ## Using ros2 launch to run multiple nodes at once
 
@@ -123,7 +125,8 @@ Let’s put together a ROS 2 launch file using the turtlesim package and its exe
 
 ```bash
 cd launch
-touch turtlesim_launch.py
+touch turtlesim_mimic_launch.py
+chmod +x turtlesim_mimic_launch.py
 ```
 Open this directory with code using the following command
 ```bash
@@ -140,8 +143,24 @@ def generate_launch_description():
     return LaunchDescription([
         Node(
             package='turtlesim',
+            namespace='turtlesim1',
             executable='turtlesim_node',
             name='sim'
+        ),
+        Node(
+            package='turtlesim',
+            namespace='turtlesim2',
+            executable='turtlesim_node',
+            name='sim'
+        ),
+        Node(
+            package='turtlesim',
+            executable='mimic',
+            name='mimic',
+            remappings=[
+                ('/input/pose', '/turtlesim1/turtle1/pose'),
+                ('/output/cmd_vel', '/turtlesim2/turtle1/cmd_vel'),
+            ]
         )
     ])
 ```
@@ -150,8 +169,24 @@ Then, hit <kbd>CTRL</kbd>+<kbd>S</kbd>, to save the changes to the file, then cl
 To run the launch file created above, enter into the directory you created earlier and run the following command:
 
 ```bash
-ros2 launch turtlesim_launch.py
+ros2 launch turtlesim_mimic_launch.py
 ```
+### Publishing a message 
+To see the system in action, open a new terminal and run the ros2 topic pub command on the /turtlesim1/turtle1/cmd_vel topic to get the first turtle moving
+
+```bash
+cd erc_ws
+cd src
+cd week0_tutorials
+cd launch
+```
+
+```bash
+ros2 topic pub -r 1 /turtlesim1/turtle1/cmd_vel geometry_msgs/msg/Twist "{linear: {x: 2.0, y: 0.0, z: 0.0}, angular: {x: 0.0, y: 0.0, z: -1.8}}"
+```
+
+![image](https://github.com/user-attachments/assets/537746fc-d2f7-47f4-97b7-709e3b524dfc)
+
 
 File structure is something like this
 
