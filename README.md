@@ -260,9 +260,10 @@ chmod +x talker.py #Making the python file executable
 
 This is a basic publisher node python script ```talker.py```  (taken from the official ROS tutorials from the website, and comments are added to help you understand the working of each line):
 
-To open VS code.
+To open VS code or codium 
 ```bash
-code .
+code . # vscode
+codium #codium
 ```
 Paste the following in the ```talker.py```
 
@@ -330,7 +331,8 @@ Navigate one level back to the ```erc_ws/src/week0_tutorials``` directory, where
 
 ```bash
 cd ..
-code .
+code . # vscode
+codium #codium
 ```
 
 Open package.xml with your text editor. Add the following dependencies corresponding to your node’s import statements:
