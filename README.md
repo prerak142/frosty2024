@@ -129,7 +129,8 @@ chmod +x turtlesim_mimic_launch.py
 ```
 Open this directory with code using the following command
 ```bash
-code .
+code . # vs code 
+codium # codium
 ```
 
 Copy and paste the complete code into the ```launch/turtlesim_launch.py``` file:
