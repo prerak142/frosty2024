@@ -175,11 +175,9 @@ ros2 launch turtlesim_mimic_launch.py
 To see the system in action, open a new terminal and run the ros2 topic pub command on the /turtlesim1/turtle1/cmd_vel topic to get the first turtle moving
 
 ```bash
-cd ..
-cd erc_ws
-cd src
-cd week0_tutorials
-cd launch
+cd ~
+
+cd erc_ws/src/week0_tutorials/week0_tutorials
 ```
 
 ```bash
